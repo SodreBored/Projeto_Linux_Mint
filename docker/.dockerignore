@@ -1,0 +1,9 @@
+**/.git
+**/.gitignore
+relatorio/
+*.md
+*.pdf
+*.aux
+*.log
+*.toc
+*.out

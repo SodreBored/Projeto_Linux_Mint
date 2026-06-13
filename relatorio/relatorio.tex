@@ -1,0 +1,608 @@
+\documentclass[a4paper,12pt]{article}
+
+% =============================================================================
+% Pacotes
+% =============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian,provide=*]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{indentfirst}
+\usepackage{enumitem}
+
+% =============================================================================
+% Configuração de links e cores
+% =============================================================================
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=blue,
+    pdftitle={Linux Mint em Docker - Estrutura do Sistema Operacional e Kernel},
+    pdfauthor={Equipe AV2}
+}
+
+% =============================================================================
+% Configuração de blocos de código (Shell Script)
+% =============================================================================
+\lstdefinestyle{shell}{
+    backgroundcolor=\color{black!5},
+    basicstyle=\ttfamily\footnotesize,
+    commentstyle=\color{green!40!black},
+    keywordstyle=\color{blue},
+    stringstyle=\color{red!60!black},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    breaklines=true,
+    frame=single,
+    tabsize=2,
+    language=bash,
+    literate=
+        {á}{{\'a}}1 {à}{{\`a}}1 {ã}{{\~a}}1 {â}{{\^a}}1 {ä}{{\"a}}1
+        {é}{{\'e}}1 {è}{{\`e}}1 {ê}{{\^e}}1 {ë}{{\"e}}1
+        {í}{{\'i}}1 {ì}{{\`i}}1 {î}{{\^i}}1 {ï}{{\"i}}1
+        {ó}{{\'o}}1 {ò}{{\`o}}1 {õ}{{\~o}}1 {ô}{{\^o}}1 {ö}{{\"o}}1
+        {ú}{{\'u}}1 {ù}{{\`u}}1 {û}{{\^u}}1 {ü}{{\"u}}1
+        {ç}{{\c c}}1
+        {Á}{{\'A}}1 {À}{{\`A}}1 {Ã}{{\~A}}1 {Â}{{\^A}}1
+        {É}{{\'E}}1 {È}{{\`E}}1 {Ê}{{\^E}}1
+        {Í}{{\'I}}1 {Ì}{{\`I}}1 {Î}{{\^I}}1
+        {Ó}{{\'O}}1 {Ò}{{\`O}}1 {Õ}{{\~O}}1 {Ô}{{\^O}}1
+        {Ú}{{\'U}}1 {Ù}{{\`U}}1 {Û}{{\^U}}1
+        {Ç}{{\c C}}1
+        {ã}{{\~a}}1 {õ}{{\~o}}1
+}
+\lstset{style=shell}
+
+\setlength{\parindent}{1.25cm}
+
+% =============================================================================
+% Documento
+% =============================================================================
+\begin{document}
+
+% --------------------------------------------------------------------------
+% Capa
+% --------------------------------------------------------------------------
+\begin{titlepage}
+    \centering
+    \vspace*{1cm}
+
+    {\large NOME DA INSTITUIÇÃO DE ENSINO}\\[0.3cm]
+    {\large CURSO DE [NOME DO CURSO]}\\[0.3cm]
+    {\large DISCIPLINA DE SISTEMAS OPERACIONAIS}
+
+    \vspace{3cm}
+
+    {\Huge \bfseries Linux Mint em Ambiente Docker}\\[0.5cm]
+    {\Large Estrutura do Sistema Operacional, Kernel e Automação via Shell Script}
+
+    \vspace{3cm}
+
+    {\large Avaliação AV2}
+
+    \vspace{2cm}
+
+    {\large \textbf{Equipe:}}\\[0.3cm]
+    \begin{tabular}{c}
+        Nome do Integrante 1 \\
+        Nome do Integrante 2 \\
+        Nome do Integrante 3 \\
+        Nome do Integrante 4 \\
+        Nome do Integrante 5 \\
+    \end{tabular}
+
+    \vfill
+
+    {\large Maceió/AL}\\
+    {\large 2026}
+
+\end{titlepage}
+
+% --------------------------------------------------------------------------
+% Sumário
+% --------------------------------------------------------------------------
+\tableofcontents
+\newpage
+
+% --------------------------------------------------------------------------
+% 1. Introdução
+% --------------------------------------------------------------------------
+\section{Introdução}
+
+Este relatório foi desenvolvido como parte da Avaliação AV2 da disciplina de
+Sistemas Operacionais, cujo objetivo é o estudo prático e teórico de um
+sistema operacional executado em ambiente virtualizado por containers. O
+sistema operacional escolhido pela equipe foi o \textbf{Linux Mint}, uma
+distribuição Linux baseada no Ubuntu/Debian, amplamente utilizada em desktops
+por sua estabilidade, leveza e familiaridade de uso.
+
+O trabalho contempla os seguintes pontos, conforme especificado nas regras da
+atividade:
+
+\begin{itemize}
+    \item Instalação do sistema operacional escolhido em um ambiente
+          containerizado (Docker);
+    \item Apresentação da estrutura geral do sistema operacional;
+    \item Explicação sobre o funcionamento do Kernel;
+    \item Demonstração prática utilizando uma linguagem de script
+          (Shell Script);
+    \item Versionamento de todo o material produzido em um repositório
+          do GitHub;
+    \item Elaboração deste relatório em \LaTeX.
+\end{itemize}
+
+Nas seções a seguir, será apresentada a justificativa para o uso do Docker,
+uma visão geral do Linux Mint, a estrutura de diretórios do sistema
+operacional (FHS), o funcionamento do Kernel Linux, os scripts desenvolvidos
+em Shell Script e, por fim, a estratégia de versionamento utilizada.
+
+
+% --------------------------------------------------------------------------
+% 2. Ambiente do Projeto: Docker
+% --------------------------------------------------------------------------
+\section{Ambiente do Projeto: Docker}
+
+\subsection{O que é o Docker}
+
+O Docker é uma plataforma de virtualização baseada em \textbf{containers}.
+Diferentemente de uma máquina virtual tradicional, que emula um hardware
+completo e exige um sistema operacional convidado completo (com seu próprio
+kernel), um container compartilha o kernel do sistema hospedeiro e isola
+apenas o espaço de usuário (bibliotecas, binários e arquivos de
+configuração). Isso resulta em imagens mais leves, criação quase instantânea
+e menor consumo de recursos quando comparado a uma máquina virtual completa.
+
+A equipe optou pelo uso do Docker em vez de uma máquina virtual completa pelos
+seguintes motivos:
+
+\begin{itemize}
+    \item \textbf{Portabilidade}: o ambiente pode ser reproduzido de forma
+          idêntica em qualquer computador que tenha o Docker instalado,
+          independentemente do sistema operacional do hospedeiro;
+    \item \textbf{Reprodutibilidade}: o \texttt{Dockerfile} documenta de
+          forma explícita e versionável todos os passos necessários para
+          montar o ambiente;
+    \item \textbf{Leveza}: a imagem ocupa menos espaço e inicializa em
+          poucos segundos, facilitando testes repetidos durante o
+          desenvolvimento dos scripts.
+\end{itemize}
+
+\subsection{Configuração do Linux Mint no Docker}
+
+Para executar o Linux Mint em container, foi utilizada uma imagem baseada no
+Linux Mint 21.3 ("Una"), que por sua vez é construída sobre o Ubuntu 22.04
+LTS. A partir dessa imagem base, foi criado um \texttt{Dockerfile}
+personalizado que:
+
+\begin{enumerate}
+    \item Instala ferramentas auxiliares utilizadas pelos scripts da equipe
+          (\texttt{htop}, \texttt{tree}, \texttt{neofetch},
+          \texttt{net-tools}, entre outras);
+    \item Copia os scripts Shell desenvolvidos pela equipe para dentro do
+          container, no diretório \texttt{/projeto/scripts};
+    \item Define como comando padrão (\texttt{CMD}) a execução do menu
+          interativo \texttt{00\_menu.sh}, que dá acesso a todas as
+          demonstrações realizadas.
+\end{enumerate}
+
+O trecho a seguir apresenta o \texttt{Dockerfile} utilizado:
+
+\begin{lstlisting}[caption={Dockerfile do ambiente Linux Mint}]
+FROM linuxmintd/mint21.3-una:latest
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y \
+        htop tree neofetch net-tools procps \
+        nano less man-db kmod \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /projeto
+
+COPY scripts/ /projeto/scripts/
+
+RUN chmod +x /projeto/scripts/*.sh
+
+CMD ["/bin/bash", "/projeto/scripts/00_menu.sh"]
+\end{lstlisting}
+
+Para construir e executar o container, são utilizados os comandos:
+
+\begin{lstlisting}[language=bash, caption={Construção e execução do container}]
+# Construir a imagem
+docker build -t linuxmint-av2 -f docker/Dockerfile .
+
+# Executar o container interativamente
+docker run -it --rm linuxmint-av2
+\end{lstlisting}
+
+Alternativamente, a equipe disponibilizou um arquivo
+\texttt{docker-compose.yml}, permitindo a execução com um único comando:
+
+\begin{lstlisting}[language=bash, caption={Execução via Docker Compose}]
+docker compose -f docker/docker-compose.yml run --rm linuxmint-av2
+\end{lstlisting}
+
+
+% --------------------------------------------------------------------------
+% 3. O Sistema Operacional Linux Mint
+% --------------------------------------------------------------------------
+\section{O Sistema Operacional Linux Mint}
+
+\subsection{Visão geral}
+
+O \textbf{Linux Mint} é uma distribuição Linux de código aberto, lançada em
+2006, derivada do Ubuntu (e, por consequência, do Debian). Seu principal
+objetivo é oferecer um sistema operacional elegante, moderno, confortável e
+de fácil utilização, sendo uma das distribuições mais populares para
+computadores desktop. Entre suas principais características, destacam-se:
+
+\begin{itemize}
+    \item Utiliza o ambiente de área de trabalho \textbf{Cinnamon} (em sua
+          edição principal), além de oferecer variações com os ambientes
+          MATE e Xfce;
+    \item Mantém compatibilidade total com o ecossistema de pacotes
+          \texttt{.deb} e com o gerenciador de pacotes \texttt{APT},
+          herdado do Ubuntu/Debian;
+    \item Inclui, por padrão, codecs multimídia e drivers proprietários,
+          facilitando o uso imediato após a instalação;
+    \item É amplamente utilizado como alternativa ao Windows, por usuários
+          que buscam uma interface familiar com menor custo de
+          aprendizado.
+\end{itemize}
+
+\subsection{Estrutura do Sistema Operacional}
+
+De forma geral, qualquer sistema operacional do tipo Linux pode ser
+representado em camadas, conforme ilustrado na Figura \ref{fig:camadas}:
+
+\begin{enumerate}
+    \item \textbf{Hardware}: processador, memória, discos, placas de rede
+          e demais dispositivos físicos;
+    \item \textbf{Kernel}: núcleo do sistema operacional, responsável por
+          gerenciar diretamente o hardware e oferecer uma interface
+          padronizada (chamadas de sistema) para os programas;
+    \item \textbf{Shell e bibliotecas do sistema}: interpretadores de
+          comandos (como o Bash) e bibliotecas (como a \texttt{glibc}) que
+          fazem a ponte entre as aplicações e o kernel;
+    \item \textbf{Aplicações}: programas utilizados pelo usuário final
+          (navegadores, editores de texto, ferramentas administrativas
+          etc.).
+\end{enumerate}
+
+\begin{figure}[h]
+    \centering
+    \fbox{\begin{minipage}{0.7\textwidth}
+        \centering
+        \vspace{0.3cm}
+        \textbf{Aplicações} (LibreOffice, Firefox, Terminal, ...) \\[0.4cm]
+        $\big\downarrow$ chamadas de biblioteca $\big\uparrow$ \\[0.4cm]
+        \textbf{Shell / Bibliotecas} (Bash, glibc) \\[0.4cm]
+        $\big\downarrow$ chamadas de sistema (syscalls) $\big\uparrow$ \\[0.4cm]
+        \textbf{Kernel Linux} (processos, memória, arquivos, rede,
+        drivers) \\[0.4cm]
+        $\big\downarrow$ instruções de hardware $\big\uparrow$ \\[0.4cm]
+        \textbf{Hardware} (CPU, RAM, Disco, Rede)
+        \vspace{0.3cm}
+    \end{minipage}}
+    \caption{Camadas de um sistema operacional Linux}
+    \label{fig:camadas}
+\end{figure}
+
+\subsubsection{Hierarquia de diretórios (FHS)}
+
+A organização do sistema de arquivos do Linux Mint segue o padrão
+\textbf{FHS} (\textit{Filesystem Hierarchy Standard}), comum à maioria das
+distribuições Linux. A Tabela \ref{tab:fhs} resume os diretórios mais
+importantes encontrados na raiz (\texttt{/}) do sistema.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|p{10cm}|}
+        \hline
+        \textbf{Diretório} & \textbf{Descrição} \\ \hline
+        \texttt{/bin}  & Binários essenciais (comandos básicos como
+                          \texttt{ls}, \texttt{cp}, \texttt{cat}). \\ \hline
+        \texttt{/boot} & Arquivos do kernel (\texttt{vmlinuz}), initramfs
+                          e do gerenciador de boot (GRUB). \\ \hline
+        \texttt{/dev}  & Arquivos especiais que representam dispositivos
+                          de hardware. \\ \hline
+        \texttt{/etc}  & Arquivos de configuração do sistema e dos
+                          aplicativos. \\ \hline
+        \texttt{/home} & Diretórios pessoais dos usuários. \\ \hline
+        \texttt{/lib}  & Bibliotecas compartilhadas usadas pelos
+                          binários do sistema. \\ \hline
+        \texttt{/proc} & Sistema de arquivos virtual com informações do
+                          kernel e processos em execução. \\ \hline
+        \texttt{/sys}  & Sistema de arquivos virtual com informações
+                          sobre dispositivos e drivers. \\ \hline
+        \texttt{/tmp}  & Arquivos temporários. \\ \hline
+        \texttt{/usr}  & Programas, bibliotecas e documentação para os
+                          usuários (maior parte do sistema). \\ \hline
+        \texttt{/var}  & Dados variáveis: logs, caches, bancos de dados
+                          de pacotes. \\ \hline
+    \end{tabular}
+    \caption{Principais diretórios do FHS no Linux Mint}
+    \label{tab:fhs}
+\end{table}
+
+Essa estrutura pode ser explorada de forma prática por meio do script
+\texttt{02\-\_es\-tru\-tu\-ra\-\_ar\-qui\-vos.sh}, descrito na Seção
+\ref{sec:scripts}.
+
+
+% --------------------------------------------------------------------------
+% 4. O Kernel Linux
+% --------------------------------------------------------------------------
+\section{O Kernel Linux}
+
+\subsection{Definição e tipo de kernel}
+
+O \textbf{kernel} é o componente central de um sistema operacional. Ele atua
+como intermediário entre o hardware e os programas em execução, sendo
+responsável por controlar o acesso aos recursos físicos da máquina (CPU,
+memória, dispositivos de entrada e saída) de forma segura e organizada.
+
+Existem diferentes arquiteturas de kernel, sendo as principais:
+
+\begin{itemize}
+    \item \textbf{Microkernel}: apenas funcionalidades mínimas (comunicação
+          entre processos, gerenciamento básico de memória e
+          escalonamento) ficam no espaço do kernel; drivers e serviços
+          rodam em espaço de usuário, separados em processos isolados;
+    \item \textbf{Kernel monolítico}: todos os serviços principais do
+          sistema operacional (gerenciamento de processos, memória,
+          sistema de arquivos, drivers, rede) executam no mesmo espaço de
+          endereçamento privilegiado (kernel space).
+\end{itemize}
+
+O \textbf{Linux} adota uma abordagem \textbf{monolítica modular}: o núcleo é
+monolítico, mas grande parte de seus componentes (especialmente drivers de
+dispositivos) pode ser compilada como \textbf{módulos} (arquivos
+\texttt{.ko}), que são carregados e descarregados dinamicamente em tempo de
+execução, sem necessidade de reiniciar o sistema ou recompilar o kernel.
+
+\subsection{Principais funções do Kernel}
+
+\begin{enumerate}
+    \item \textbf{Gerenciamento de processos}: o kernel cria, escalona,
+          suspende e finaliza processos. O componente responsável por
+          decidir qual processo utilizará a CPU em cada instante é o
+          \textit{scheduler} (escalonador);
+    \item \textbf{Gerenciamento de memória}: controla a alocação de memória
+          física e virtual para cada processo, implementa a memória
+          \textit{swap} e garante o isolamento entre os espaços de memória
+          dos processos;
+    \item \textbf{Gerenciamento de dispositivos (drivers)}: comunica-se com
+          o hardware por meio de drivers, que no Linux frequentemente são
+          implementados como módulos do kernel;
+    \item \textbf{Sistema de arquivos}: implementa o suporte a diferentes
+          formatos de sistemas de arquivos (ext4, btrfs, NTFS, etc.) e
+          fornece chamadas de sistema (\textit{syscalls}) como
+          \texttt{open}, \texttt{read}, \texttt{write} e \texttt{close};
+    \item \textbf{Comunicação entre processos e rede}: implementa
+          mecanismos de IPC (\textit{pipes}, sinais, memória compartilhada)
+          e toda a pilha de protocolos de rede (TCP/IP).
+\end{enumerate}
+
+\subsection{Observando o Kernel na prática}
+
+Dentro do container Linux Mint, é possível observar informações fornecidas
+pelo kernel por meio de comandos simples e dos sistemas de arquivos virtuais
+\texttt{/proc} e \texttt{/sys}. Alguns exemplos utilizados no script
+\texttt{03\_kernel\_info.sh}:
+
+\begin{lstlisting}[language=bash, caption={Comandos para inspecionar o Kernel}]
+# Versão do kernel em execução
+uname -a
+
+# Detalhes da versão do kernel (compilador, data)
+cat /proc/version
+
+# Módulos do kernel carregados atualmente
+lsmod
+
+# Parâmetros do kernel em tempo de execução
+sysctl kernel.ostype kernel.osrelease kernel.version
+
+# Dispositivos gerenciados pelo kernel
+ls /sys/class
+\end{lstlisting}
+
+Esses comandos demonstram, na prática, que o kernel está constantemente
+expondo informações sobre o estado do hardware e dos processos através de
+arquivos virtuais, permitindo que ferramentas de espaço de usuário (como
+\texttt{ps}, \texttt{top} e \texttt{free}) leiam e apresentem esses dados de
+forma amigável.
+
+
+% --------------------------------------------------------------------------
+% 5. Linguagem utilizada: Shell Script
+% --------------------------------------------------------------------------
+\section{Linguagem de Programação Utilizada: Shell Script}
+\label{sec:scripts}
+
+\subsection{Justificativa}
+
+A linguagem escolhida pela equipe para a automação das demonstrações foi o
+\textbf{Shell Script}, na variante \textbf{Bash} (\textit{Bourne Again
+Shell}), o interpretador de comandos padrão do Linux Mint. A escolha se
+justifica por:
+
+\begin{itemize}
+    \item Ser a linguagem nativa de interação com o sistema operacional,
+          permitindo acesso direto a comandos, arquivos de configuração e
+          aos sistemas de arquivos virtuais \texttt{/proc} e \texttt{/sys};
+    \item Não exigir instalação de ferramentas adicionais, já que o Bash
+          está presente em qualquer instalação padrão do Linux Mint
+          (e, portanto, na imagem Docker utilizada);
+    \item Ser amplamente utilizada para automação de tarefas
+          administrativas, sendo um conteúdo diretamente relacionado à
+          disciplina de Sistemas Operacionais.
+\end{itemize}
+
+\subsection{Scripts desenvolvidos}
+
+Foram desenvolvidos seis scripts, organizados no diretório
+\texttt{scripts/} do repositório, descritos na Tabela \ref{tab:scripts}.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{Script} & \textbf{Descrição} \\ \hline
+        \texttt{00\_menu.sh} &
+            Menu interativo, ponto de entrada do container, que permite
+            escolher e executar as demais demonstrações. \\ \hline
+        \texttt{01\_info\_sistema.sh} &
+            Exibe informações gerais do sistema: distribuição,
+            \textit{hostname}, tempo de atividade e arquitetura. \\ \hline
+        \texttt{02\_estrutura\_arquivos.sh} &
+            Lista e descreve a estrutura de diretórios do sistema
+            operacional (FHS). \\ \hline
+        \texttt{03\_kernel\_info.sh} &
+            Exibe informações sobre o kernel: versão, módulos carregados,
+            parâmetros de execução e explica suas funções. \\ \hline
+        \texttt{04\_processos\_memoria.sh} &
+            Demonstra o gerenciamento de processos e memória realizado
+            pelo kernel, utilizando \texttt{ps}, \texttt{free} e
+            \texttt{pstree}. \\ \hline
+        \texttt{05\_pacotes.sh} &
+            Demonstra o funcionamento do gerenciador de pacotes
+            APT/dpkg, utilizado pelo Linux Mint. \\ \hline
+    \end{tabular}
+    \caption{Scripts desenvolvidos pela equipe}
+    \label{tab:scripts}
+\end{table}
+
+A título de exemplo, o trecho a seguir apresenta o script
+\texttt{02\-\_es\-tru\-tu\-ra\-\_ar\-qui\-vos.sh}, responsável por listar e descrever os
+diretórios da raiz do sistema:
+
+\begin{lstlisting}[language=bash, caption={Trecho do script 02\_estrutura\_arquivos.sh}]
+#!/bin/bash
+echo "Conteúdo da raiz '/':"
+ls -lh /
+
+echo "Descrição de cada diretório principal:"
+cat <<'TEXTO'
+/bin    -> Binários essenciais usados por todos os usuários
+/boot   -> Arquivos necessários para o boot (kernel, GRUB)
+/etc    -> Arquivos de configuração do sistema
+/home   -> Diretórios pessoais dos usuários
+/proc   -> Informações do kernel e processos (sistema virtual)
+/usr    -> Programas e bibliotecas para os usuários
+/var    -> Dados variáveis: logs, caches, etc.
+TEXTO
+\end{lstlisting}
+
+Todos os scripts foram testados dentro do container Linux Mint e podem ser
+executados individualmente ou através do menu principal
+(\texttt{00\_menu.sh}), conforme demonstrado durante a apresentação.
+
+
+% --------------------------------------------------------------------------
+% 6. Versionamento com Git e GitHub
+% --------------------------------------------------------------------------
+\section{Versionamento com Git e GitHub}
+
+Todo o material produzido pela equipe (Dockerfile, scripts, relatório em
+\LaTeX{} e demais arquivos de apoio) foi versionado utilizando o sistema de
+controle de versão \textbf{Git} e hospedado em um repositório do
+\textbf{GitHub}.
+
+A organização do repositório segue a estrutura apresentada a seguir:
+
+\begin{lstlisting}[caption={Estrutura do repositório no GitHub}]
+projeto-av2-linux-mint/
+|-- README.md
+|-- .gitignore
+|-- docker/
+|   |-- Dockerfile
+|   |-- docker-compose.yml
+|   `-- .dockerignore
+|-- scripts/
+|   |-- 00_menu.sh
+|   |-- 01_info_sistema.sh
+|   |-- 02_estrutura_arquivos.sh
+|   |-- 03_kernel_info.sh
+|   |-- 04_processos_memoria.sh
+|   `-- 05_pacotes.sh
+`-- relatorio/
+    |-- relatorio.tex
+    `-- relatorio.pdf
+\end{lstlisting}
+
+O fluxo de trabalho adotado pela equipe seguiu, de forma simplificada, os
+seguintes passos:
+
+\begin{enumerate}
+    \item Criação do repositório no GitHub e clonagem local
+          (\texttt{git clone});
+    \item Desenvolvimento incremental do \texttt{Dockerfile} e dos
+          scripts, com commits descritivos para cada funcionalidade
+          adicionada;
+    \item Testes do ambiente Docker a cada alteração relevante;
+    \item Escrita e atualização do relatório em \LaTeX{} em paralelo ao
+          desenvolvimento técnico;
+    \item Envio (\textit{push}) das alterações para o repositório remoto,
+          mantendo o histórico de versões disponível para consulta.
+\end{enumerate}
+
+O link do repositório utilizado pela equipe é:
+\url{https://github.com/USUARIO/projeto-av2-linux-mint}
+\textit{(substituir pelo endereço real do repositório da equipe)}.
+
+
+% --------------------------------------------------------------------------
+% 7. Conclusão
+% --------------------------------------------------------------------------
+\section{Conclusão}
+
+O desenvolvimento deste projeto permitiu à equipe consolidar, de forma
+prática, diversos conceitos fundamentais da disciplina de Sistemas
+Operacionais. A utilização do Docker possibilitou a criação de um ambiente
+isolado, portátil e facilmente reproduzível, contendo o Linux Mint, sem a
+necessidade de uma instalação tradicional em máquina física ou virtual
+completa.
+
+Através da exploração da estrutura de diretórios (FHS) e dos mecanismos
+oferecidos pelo Kernel Linux (gerenciamento de processos, memória,
+dispositivos e arquivos), foi possível compreender, na prática, como as
+camadas de hardware, kernel, shell e aplicações se relacionam para formar um
+sistema operacional funcional.
+
+Por fim, o uso de Shell Script para automatizar as demonstrações reforçou a
+importância dessa linguagem como ferramenta de administração de sistemas
+Linux, enquanto o versionamento com Git e GitHub garantiu organização,
+rastreabilidade e colaboração eficiente entre os membros da equipe durante
+todo o desenvolvimento do projeto.
+
+
+% --------------------------------------------------------------------------
+% 8. Referências
+% --------------------------------------------------------------------------
+\section{Referências}
+
+\sloppy
+\begin{enumerate}
+    \item LINUX MINT TEAM. \textit{Linux Mint Documentation}. Disponível em:
+          \url{https://linuxmint.com}.
+    \item THE LINUX KERNEL ORGANIZATION. \textit{The Linux Kernel
+          documentation}. Disponível em: \url{https://kernel.org}.
+    \item DOCKER INC. \textit{Docker Documentation}. Disponível em:
+          \url{https://docs.docker.com}.
+    \item FILESYSTEM HIERARCHY STANDARD GROUP. \textit{Filesystem
+          Hierarchy Standard (FHS)}. Disponível em:
+          \url{https://refspecs.linuxfoundation.org/fhs.shtml}.
+    \item TANENBAUM, A. S.; BOS, H. \textit{Modern Operating Systems}.
+          4. ed. Pearson, 2014.
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,15 @@
+# ---- LaTeX ----
+relatorio/*.aux
+relatorio/*.toc
+relatorio/*.out
+relatorio/*.log
+relatorio/*.synctex.gz
+relatorio/*.fls
+relatorio/*.fdb_latexmk
+
+# ---- Saídas geradas pelos scripts ----
+saida_completa.txt
+
+# ---- Sistema ----
+*.swp
+.DS_Store

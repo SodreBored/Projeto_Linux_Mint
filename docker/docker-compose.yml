@@ -1,0 +1,23 @@
+# =============================================================================
+# docker-compose.yml - Linux Mint (AV2 - Sistemas Operacionais)
+# =============================================================================
+# Facilita a construção e execução do ambiente:
+#
+#   docker compose -f docker/docker-compose.yml build
+#   docker compose -f docker/docker-compose.yml run --rm linuxmint-av2
+#
+# =============================================================================
+
+services:
+  linuxmint-av2:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: linuxmint-av2:latest
+    container_name: linuxmint_av2
+    stdin_open: true     # mantém o STDIN aberto (necessário para o menu)
+    tty: true             # alocar um pseudo-TTY (necessário para o menu)
+    volumes:
+      # Permite editar os scripts fora do container e ver o efeito
+      # imediatamente, sem precisar reconstruir a imagem.
+      - ../scripts:/projeto/scripts
