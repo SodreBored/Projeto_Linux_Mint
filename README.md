@@ -5,14 +5,7 @@ operacional escolhido pela equipe foi o **Linux Mint**, executado em um
 **container Docker**, com demonstrações práticas escritas em **Shell Script
 (Bash)**.
 
-## Itens do trabalho atendidos
-
-- [x] Sistema operacional instalado em Docker (Linux Mint 21.3 "Una")
-- [x] Estrutura do SO apresentada (hierarquia de diretórios / FHS)
-- [x] Explicação sobre o Kernel (tipo, funções, observação prática)
-- [x] Demonstrações em Shell Script
-- [x] Versionamento no GitHub
-- [x] Relatório em LaTeX (`relatorio/relatorio.tex` / `relatorio/relatorio.pdf`)
+## 
 
 ## Estrutura do repositório
 
@@ -25,12 +18,12 @@ projeto-av2-linux-mint/
 │   ├── docker-compose.yml  # Build/execução simplificados
 │   └── .dockerignore
 ├── scripts/
-│   ├── 00_menu.sh               # Menu interativo (ponto de entrada)
-│   ├── 01_info_sistema.sh       # Informações gerais do sistema
-│   ├── 02_estrutura_arquivos.sh # Estrutura de diretórios (FHS)
-│   ├── 03_kernel_info.sh        # Informações e explicação do Kernel
-│   ├── 04_processos_memoria.sh  # Processos e memória
-│   └── 05_pacotes.sh            # Gerenciamento de pacotes (APT/dpkg)
+│   ├── 00\_menu.sh               # Menu interativo (ponto de entrada)
+│   ├── 01\_info\_sistema.sh       # Informações gerais do sistema
+│   ├── 02\_estrutura\_arquivos.sh # Estrutura de diretórios (FHS)
+│   ├── 03\_kernel\_info.sh        # Informações e explicação do Kernel
+│   ├── 04\_processos\_memoria.sh  # Processos e memória
+│   └── 05\_pacotes.sh            # Gerenciamento de pacotes (APT/dpkg)
 └── relatorio/
     ├── relatorio.tex   # Código-fonte do relatório em LaTeX
     └── relatorio.pdf   # Relatório final (gerado)
@@ -38,25 +31,15 @@ projeto-av2-linux-mint/
 
 ## Como executar (Docker)
 
-> É necessário ter o [Docker](https://www.docker.com/) instalado.
+> É necessário ter o \[Docker](https://www.docker.com/) instalado.
 
-### Opção 1 - Docker Compose (recomendado)
+### Use no terminal:
 
 ```bash
 docker compose -f docker/docker-compose.yml run --rm linuxmint-av2
 ```
 
-### Opção 2 - Docker "puro"
-
-```bash
-# Construir a imagem
-docker build -t linuxmint-av2 -f docker/Dockerfile .
-
-# Executar o container interativamente
-docker run -it --rm linuxmint-av2
-```
-
-Ao iniciar o container, o menu interativo (`00_menu.sh`) será exibido
+Ao iniciar o container, o menu interativo (`00\_menu.sh`) será exibido
 automaticamente, permitindo escolher qual demonstração executar:
 
 ```
@@ -83,8 +66,8 @@ em uma máquina/VM com Linux Mint:
 
 ```bash
 cd scripts
-chmod +x *.sh
-./00_menu.sh
+chmod +x \*.sh
+./00\_menu.sh
 ```
 
 ## Gerando o relatório em PDF
@@ -100,18 +83,16 @@ pdflatex relatorio.tex   # executar duas vezes para gerar o sumário
 
 ## Equipe
 
-| Nome | Função no projeto |
-|------|--------------------|
-| _Integrante 1_ | _ex.: Dockerfile e configuração do ambiente_ |
-| _Integrante 2_ | _ex.: Scripts de estrutura do SO_ |
-| _Integrante 3_ | _ex.: Scripts do Kernel_ |
-| _Integrante 4_ | _ex.: Relatório em LaTeX_ |
-| _Integrante 5_ | _ex.: Versionamento e apresentação_ |
+|Nome|Função no projeto|
+|-|-|
+|*Pedro Bertonha Sodré*|*ex.: Dockerfile e configuração do ambiente/ Relatório em LaTeX*|
+|*Eduardo Silva*|*ex.: Scripts de estrutura do SO/ Versionamento e apresentação*|
+|*Pedro Henrique*|*ex.: Scripts do Kernel*|
 
-> Edite a tabela acima com os nomes reais dos integrantes da equipe (máx. 10
-> pessoas, conforme as regras da AV2).
+## 
 
 ## Licença
 
 Projeto acadêmico, desenvolvido para fins educacionais na disciplina de
 Sistemas Operacionais.
+
