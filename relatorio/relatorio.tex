@@ -176,7 +176,7 @@ seguintes motivos:
 \subsection{Configuração do Linux Mint no Docker}
 
 Para executar o Linux Mint em container, foi utilizada uma imagem baseada no
-Linux Mint 21.3 ("Una"), que por sua vez é construída sobre o Ubuntu 22.04
+Linux Mint 21.3 ("Virginia"), que por sua vez é construída sobre o Ubuntu 22.04
 LTS. A partir dessa imagem base, foi criado um \texttt{Dockerfile}
 personalizado que:
 
@@ -194,7 +194,7 @@ personalizado que:
 O trecho a seguir apresenta o \texttt{Dockerfile} utilizado:
 
 \begin{lstlisting}[caption={Dockerfile do ambiente Linux Mint}]
-FROM linuxmintd/mint21.3-una:latest
+FROM linuxmintd/mint21.3-amd64:latest
 
 ENV DEBIAN_FRONTEND=noninteractive
 

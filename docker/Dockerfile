@@ -5,11 +5,11 @@
 # necessárias para explorar a estrutura do sistema operacional e o kernel,
 # e copia os scripts shell desenvolvidos pela equipe.
 #
-# Imagem base: linuxmintd/mint21.3-una (imagem mantida pela comunidade,
-# baseada no Ubuntu 22.04 / Linux Mint 21.3 "Una")
+# Imagem base: linuxmintd/mint21.3-amd64 (imagem mantida pela comunidade,
+# baseada no Ubuntu 22.04 / Linux Mint 21.3 "Virginia")
 # =============================================================================
 
-FROM linuxmintd/mint21.3-una:latest
+FROM linuxmintd/mint21.3-amd64:latest
 
 LABEL maintainer="Equipe AV2 - Sistemas Operacionais"
 LABEL description="Ambiente Linux Mint para estudo de estrutura de SO e Kernel"
