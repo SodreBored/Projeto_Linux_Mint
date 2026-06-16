@@ -58,28 +58,6 @@ Selecione uma opção:
   0) Sair
 ```
 
-## Executando os scripts sem o Docker
-
-Os scripts são compatíveis com qualquer distribuição baseada em
-Debian/Ubuntu (como o próprio Linux Mint). Para executá-los diretamente
-em uma máquina/VM com Linux Mint:
-
-```bash
-cd scripts
-chmod +x \*.sh
-./00\_menu.sh
-```
-
-## Gerando o relatório em PDF
-
-O relatório foi escrito em LaTeX (`relatorio/relatorio.tex`). Para gerar o
-PDF (`relatorio.pdf`), com o TeX Live instalado:
-
-```bash
-cd relatorio
-pdflatex relatorio.tex
-pdflatex relatorio.tex   # executar duas vezes para gerar o sumário
-```
 
 ## Equipe
 
