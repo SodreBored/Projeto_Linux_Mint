@@ -84,6 +84,7 @@ pdflatex relatorio.tex   # executar duas vezes para gerar o sumário
 ## Equipe
 
 |Nome|Função no projeto|
+
 João Victor Araujo dos Santos
 Ruan Welisson Nazário Teles
 Guilherme Virgílio de Moura Alves
