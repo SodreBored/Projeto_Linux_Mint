@@ -84,10 +84,16 @@ pdflatex relatorio.tex   # executar duas vezes para gerar o sumário
 ## Equipe
 
 |Nome|Função no projeto|
-|-|-|
-|*Pedro Bertonha Sodré*|*ex.: Dockerfile e configuração do ambiente/ Relatório em LaTeX*|
-|*Eduardo Silva*|*ex.: Scripts de estrutura do SO/ Versionamento e apresentação*|
-|*Pedro Henrique*|*ex.: Scripts do Kernel*|
+João Victor Araujo dos Santos
+Ruan Welisson Nazário Teles
+Guilherme Virgílio de Moura Alves
+Pedro Henrique Mendes de Oliveira
+Ivano Gabriel Silva Melo
+Cauã Manoel Nogueira de Aguiar
+Eduardo dos Santos Silva
+Pedro Bertonha Sodré
+Matheus Kayke da Silva Marinho Mariano
+Lucas da Silva Fernandes
 
 ## 
 
