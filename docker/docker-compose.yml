@@ -17,7 +17,16 @@ services:
     container_name: linuxmint_av2
     stdin_open: true     # mantém o STDIN aberto (necessário para o menu)
     tty: true             # alocar um pseudo-TTY (necessário para o menu)
-    volumes:
-      # Permite editar os scripts fora do container e ver o efeito
-      # imediatamente, sem precisar reconstruir a imagem.
-      - ../scripts:/projeto/scripts
+    # ---------------------------------------------------------------------
+    # ATENCAO: o volume abaixo monta os scripts do SEU DISCO por cima dos
+    # scripts ja corrigidos dentro da imagem. Se os arquivos do seu disco
+    # estiverem com CRLF (Windows), o erro "$'\r': command not found" volta.
+    #
+    # Ele esta DESATIVADO para garantir que o container use os scripts
+    # corrigidos (LF) que foram convertidos durante o build.
+    #
+    # So reative se tiver certeza de que seus scripts locais estao em LF
+    # (rode antes: dos2unix scripts/*.sh   ou   sed -i 's/\r$//' scripts/*.sh)
+    # ---------------------------------------------------------------------
+    # volumes:
+    #   - ../scripts:/projeto/scripts

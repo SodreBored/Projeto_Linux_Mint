@@ -1,0 +1,7 @@
+# Forca terminacoes de linha LF (Unix) para arquivos que rodam no Linux,
+# independentemente do sistema operacional usado para editar.
+* text=auto eol=lf
+*.sh text eol=lf
+Dockerfile text eol=lf
+*.yml text eol=lf
+.dockerignore text eol=lf

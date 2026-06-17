@@ -28,6 +28,7 @@ RUN apt-get update && apt-get install -y \
         less \
         man-db \
         kmod \
+        dos2unix \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -37,8 +38,12 @@ WORKDIR /projeto
 # Copia os scripts shell para dentro do container
 COPY scripts/ /projeto/scripts/
 
-# Garante que todos os scripts tenham permissão de execução
-RUN chmod +x /projeto/scripts/*.sh
+# Converte terminacoes de linha CRLF (Windows) para LF (Unix) e
+# garante que todos os scripts tenham permissao de execucao.
+# Isso evita o erro "$'\r': command not found" caso os arquivos
+# tenham sido editados/salvos no Windows.
+RUN dos2unix /projeto/scripts/*.sh \
+    && chmod +x /projeto/scripts/*.sh
 
 # Mensagem de boas-vindas + menu interativo ao iniciar o container
 CMD ["/bin/bash", "/projeto/scripts/00_menu.sh"]
